@@ -1,0 +1,4 @@
+# Ordem das classes do modelo treinado (bate com training/data.yaml).
+names: [labrador, golden_retriever, pastor_alemao, bulldog_frances, boxer, beagle,
+        rottweiler, pug, chihuahua, husky, spitz_pomeranian, yorkshire, doberman,
+        border_collie, shih_tzu, pinscher]

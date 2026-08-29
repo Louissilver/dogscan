@@ -1,0 +1,22 @@
+# gerado por data/dogs_prepare.py
+path: ../data/dataset_dogs
+train: images/train
+val: images/val
+
+names:
+  0: labrador
+  1: golden_retriever
+  2: pastor_alemao
+  3: bulldog_frances
+  4: boxer
+  5: beagle
+  6: rottweiler
+  7: pug
+  8: chihuahua
+  9: husky
+  10: spitz_pomeranian
+  11: yorkshire
+  12: doberman
+  13: border_collie
+  14: shih_tzu
+  15: pinscher

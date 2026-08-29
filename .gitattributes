@@ -1,0 +1,21 @@
+# Normalize line endings: LF in the repo, native on checkout.
+* text=auto
+
+*.sh        text eol=lf
+*.bat       text eol=crlf
+*.dart      text eol=lf
+*.py        text eol=lf
+*.yaml      text eol=lf
+*.yml       text eol=lf
+*.md        text eol=lf
+gradlew     text eol=lf
+
+*.png       binary
+*.jpg       binary
+*.jpeg      binary
+*.tflite    binary
+*.tar       binary
+*.tgz       binary
+*.zip       binary
+*.keystore  binary
+*.jks       binary

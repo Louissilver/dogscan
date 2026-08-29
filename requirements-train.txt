@@ -1,0 +1,7 @@
+# Treino + auto-rotulagem + export. Puxa torch (grande).
+# No Colab/Kaggle torch já vem instalado; basta `pip install ultralytics`.
+ultralytics>=8.3.0
+onnx>=1.16
+onnxruntime>=1.18
+# Export TFLite int8:
+tensorflow>=2.16

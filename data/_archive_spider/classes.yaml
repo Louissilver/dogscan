@@ -1,0 +1,41 @@
+# Classes do MVP: grupos de risco (Brasil), nao especie exata.
+# rank: GENUS | FAMILY | ORDER. O script resolve o taxonKey no GBIF via /species/match.
+# "outras" = amostragem agregada de familias comuns NAO perigosas.
+
+classes:
+  - id: 0
+    name: phoneutria           # armadeira
+    query: { name: "Phoneutria", rank: GENUS }
+    target_images: 800
+  - id: 1
+    name: loxosceles           # aranha-marrom
+    query: { name: "Loxosceles", rank: GENUS }
+    target_images: 800
+  - id: 2
+    name: latrodectus          # viuva-negra
+    query: { name: "Latrodectus", rank: GENUS }
+    target_images: 800
+  - id: 3
+    name: theraphosidae        # caranguejeira
+    query: { name: "Theraphosidae", rank: FAMILY }
+    target_images: 800
+  - id: 4
+    name: outras               # comuns / nao perigosas (rotulo agregado)
+    aggregate:
+      - { name: "Salticidae", rank: FAMILY }
+      - { name: "Araneidae", rank: FAMILY }
+      - { name: "Pholcidae", rank: FAMILY }
+      - { name: "Lycosidae", rank: FAMILY }
+      - { name: "Sparassidae", rank: FAMILY }
+      - { name: "Theridiidae", rank: FAMILY }   # contem Latrodectus -> excluido abaixo
+    exclude: ["Latrodectus"]                    # nomes (genus/family) barrados no registro
+    target_images: 1200
+
+# Filtros de qualidade aplicados a todas as buscas
+gbif:
+  dataset_key: "50c9509d-22c7-4a22-a47d-8c48425ef4a7"  # iNaturalist Research-grade Observations
+  basis_of_record: "HUMAN_OBSERVATION"
+  media_type: "StillImage"
+  country: null          # ex.: "BR" para restringir ao Brasil (menos dados)
+  page_size: 300
+  license_allow: ["CC0_1_0", "CC_BY_4_0", "CC_BY_NC_4_0"]  # null = aceitar qualquer

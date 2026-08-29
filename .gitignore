@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.ipynb_checkpoints/
+
+# Dados (grandes)
+data/raw/
+data/dataset/
+data/dataset_dogs/
+*.zip
+*.tar
+*.tgz
+*.tar.gz
+
+# Modelo no app (gerar via training/export.py)
+app/assets/models/*.tflite
+app/assets/models/*.mlmodel
+app/assets/models/*.mlpackage
+
+# Modelos / pesos / runs de treino
+*.pt
+*.tflite
+*.onnx
+*.mlmodel
+*.mlpackage
+runs/
+yolo*.pt
+
+# Flutter
+app/.dart_tool/
+app/build/
+app/.flutter-plugins
+app/.flutter-plugins-dependencies
+app/ios/Pods/
+app/.idea/
+
+# OS
+.DS_Store
+Thumbs.db
