@@ -15,17 +15,16 @@ data/dataset_dogs/
 *.tgz
 *.tar.gz
 
-# Modelo no app (gerar via training/export.py)
+# Modelos no app. dogscan.tflite (16 racas, ~3 MB) e' versionado de proposito
+# para o app rodar direto apos o clone; os demais ficam de fora.
 app/assets/models/*.tflite
+!app/assets/models/dogscan.tflite
 app/assets/models/*.mlmodel
 app/assets/models/*.mlpackage
 
-# Modelos / pesos / runs de treino
+# Modelos / pesos / runs de treino (o app/assets/models/ e' tratado acima)
 *.pt
-*.tflite
 *.onnx
-*.mlmodel
-*.mlpackage
 runs/
 yolo*.pt
 

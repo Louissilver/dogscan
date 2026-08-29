@@ -4,8 +4,8 @@ import 'package:ultralytics_yolo/ultralytics_yolo.dart';
 
 void main() => runApp(const DogScanApp());
 
-/// Troque para true depois de treinar e colocar o .tflite em
-/// assets/models/dogscan.tflite (ver README na raiz).
+/// true  -> usa assets/models/dogscan.tflite (16 racas, ja vem no repo).
+/// false -> usa o modelo COCO yolo26n (baixado on-demand), so detecta "dog".
 const bool kUseTrainedModel = true;
 
 /// Modelo COCO oficial (baixado on-demand pelo plugin) so detecta "dog"

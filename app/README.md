@@ -23,12 +23,15 @@ Emulador funciona mas a "câmera" é webcam/imagem falsa — ruim pra testar det
 
 ## Modelo
 
-- **Sem modelo treinado ainda**: `kUseTrainedModel = false` em [`lib/main.dart`](lib/main.dart).
-  App usa `yolo26n` (COCO, baixado on-demand pelo plugin) → detecta só `dog` genérico.
-  Serve pra validar câmera, permissão, overlay, FPS.
-- **Com modelo**: colocar `dogscan.tflite` em `assets/models/`, mudar a flag pra `true`, `flutter run`.
+- **Padrão**: `assets/models/dogscan.tflite` (16 raças, YOLO11n int8) já vem no repo e
+  `kUseTrainedModel = true`. `flutter run` roda o detector de raças offline, sem passos extras.
+- **Modelo próprio**: substituir `assets/models/dogscan.tflite` pelo seu `.tflite` e
+  `flutter run`. Se mudar as raças, ajustar `kBreedPt` em [`lib/main.dart`](lib/main.dart) e
+  `assets/models/metadata.yaml`.
+- **Fallback COCO**: `kUseTrainedModel = false` → usa `yolo26n` (baixado on-demand, precisa
+  Wi-Fi uma vez), detecta só `dog`. Útil pra isolar problema de câmera/overlay.
 
-Gerar o `.tflite`: ver [`../training/colab_dogs.md`](../training/colab_dogs.md).
+Treinar o `.tflite`: ver [`../training/colab_dogs.md`](../training/colab_dogs.md).
 
 ## O que já está configurado
 
@@ -43,7 +46,7 @@ Gerar o `.tflite`: ver [`../training/colab_dogs.md`](../training/colab_dogs.md).
 | const | efeito |
 |---|---|
 | `kConfidence` | limiar de confiança (0.5). Subir = menos falso-positivo, some mais |
-| `kUseTrainedModel` | alterna COCO ↔ modelo próprio |
+| `kUseTrainedModel` | `true` = modelo de raças bundlado; `false` = COCO `yolo26n` |
 | `kBreedPt` | nomes de exibição das raças |
 
 ## Problemas comuns

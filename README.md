@@ -21,11 +21,12 @@ Point the camera at a dog — DogScan draws a box around it and labels the breed
 
 - [Overview](#overview)
 - [How it works](#how-it-works)
+- [Supported breeds](#supported-breeds)
 - [Features](#features)
 - [Tech stack](#tech-stack)
 - [Repository structure](#repository-structure)
 - [Getting started](#getting-started)
-- [Train your own breed model](#train-your-own-breed-model)
+- [The model](#the-model)
 - [Configuration](#configuration)
 - [Platform notes](#platform-notes)
 - [Roadmap](#roadmap)
@@ -49,8 +50,9 @@ The repository ships:
 | `data/` | Dataset preparation: Stanford Dogs → YOLO detection format |
 | `training/` | YOLO11n training + export to TFLite (run on Colab) |
 
-Out of the box the app runs with the generic COCO model (`yolo26n`), which only knows the
-class `dog`. Training the bundled pipeline turns it into a **16-breed** detector.
+A trained **16-breed** model (`app/assets/models/dogscan.tflite`, YOLO11n int8, ~3 MB) is
+committed to the repo, so a fresh clone runs the breed detector offline with no extra steps.
+You can also retrain it yourself — see [The model](#the-model).
 
 ## How it works
 
@@ -71,10 +73,32 @@ class `dog`. Training the bundled pipeline turns it into a **16-breed** detector
   camera frame → YOLO inference → NMS → box + label + confidence → overlay
 ```
 
-The 16 breeds: `labrador · golden_retriever · pastor_alemao · bulldog_frances · boxer ·
-beagle · rottweiler · pug · chihuahua · husky · spitz_pomeranian · yorkshire · doberman ·
-border_collie · shih_tzu · pinscher`. Edit the `BREEDS` list in
-[`data/dogs_prepare.py`](data/dogs_prepare.py) to change them.
+## Supported breeds
+
+The model detects these 16 classes. Edit the `BREEDS` list in
+[`data/dogs_prepare.py`](data/dogs_prepare.py) to change them, then retrain (Option B below).
+
+| # | class id (slug) | display name (pt-BR) | Stanford Dogs folder |
+|---|-----------------|----------------------|----------------------|
+| 0 | `labrador` | Labrador | `Labrador_retriever` |
+| 1 | `golden_retriever` | Golden Retriever | `golden_retriever` |
+| 2 | `pastor_alemao` | Pastor-alemão | `German_shepherd` |
+| 3 | `bulldog_frances` | Bulldog Francês | `French_bulldog` |
+| 4 | `boxer` | Boxer | `boxer` |
+| 5 | `beagle` | Beagle | `beagle` |
+| 6 | `rottweiler` | Rottweiler | `Rottweiler` |
+| 7 | `pug` | Pug | `pug` |
+| 8 | `chihuahua` | Chihuahua | `Chihuahua` |
+| 9 | `husky` | Husky Siberiano | `Siberian_husky` |
+| 10 | `spitz_pomeranian` | Spitz Alemão (Pomerânia) | `Pomeranian` |
+| 11 | `yorkshire` | Yorkshire Terrier | `Yorkshire_terrier` |
+| 12 | `doberman` | Dobermann | `Doberman` |
+| 13 | `border_collie` | Border Collie | `Border_collie` |
+| 14 | `shih_tzu` | Shih Tzu | `Shih-Tzu` |
+| 15 | `pinscher` | Pinscher Miniatura | `miniature_pinscher` |
+
+Anything outside this list is forced into the nearest class — a Poodle will read as
+something, just wrongly.
 
 ## Features
 
@@ -101,7 +125,7 @@ border_collie · shih_tzu · pinscher`. Edit the `BREEDS` list in
 .
 ├── app/                      Flutter application
 │   ├── lib/main.dart         live camera + YOLOView + overlay
-│   ├── assets/models/        drop dogscan.tflite here (gitignored)
+│   ├── assets/models/        dogscan.tflite (16-breed model, committed)
 │   └── README.md             app-specific setup & troubleshooting
 ├── data/
 │   ├── dogs_prepare.py       Stanford Dogs → YOLO dataset + training/data.yaml
@@ -133,9 +157,8 @@ flutter pub get
 flutter run --release
 ```
 
-First launch needs Wi-Fi once — the plugin downloads the generic `yolo26n` COCO model and
-caches it. The app will detect `dog` (and person, car, …) but not the breed until you
-bundle a trained model.
+The 16-breed model ships in the repo, so this works offline immediately — point the camera
+at a dog and you get a breed label. No download, no training step.
 
 ### Build an APK
 
@@ -146,9 +169,21 @@ flutter build apk --release          # build/app/outputs/flutter-apk/app-release
 flutter build apk --release --split-per-abi
 ```
 
-## Train your own breed model
+## The model
 
-Full walkthrough: [`training/colab_dogs.md`](training/colab_dogs.md). Summary:
+There are two ways to get a model into the app.
+
+### Option A — use the one that ships with the repo (default)
+
+Nothing to do. [`app/assets/models/dogscan.tflite`](app/assets/models) is a YOLO11n int8
+detector for the 16 breeds listed above, trained on a Stanford Dogs subset (~2,750 images).
+`kUseTrainedModel` is already `true`, so `flutter run` just works. Accuracy is rough —
+it is a nano model on a small dataset and confuses visually similar breeds.
+
+### Option B — train your own
+
+Retrain with different breeds, more data, or a bigger backbone. Full walkthrough:
+[`training/colab_dogs.md`](training/colab_dogs.md). Summary:
 
 **1. Prepare the dataset** (local, one-time)
 
@@ -176,10 +211,13 @@ YOLO('runs/detect/train/weights/best.pt').export(format='tflite', int8=True, dat
 **4. Wire it into the app**
 
 ```bash
-cp best_int8.tflite app/assets/models/dogscan.tflite
-# app/lib/main.dart:  const bool kUseTrainedModel = true;
+cp best_int8.tflite app/assets/models/dogscan.tflite   # replace the bundled one
+# kUseTrainedModel is already true in app/lib/main.dart
 flutter build apk --release
 ```
+
+If you change the breed list, also update `kBreedPt` in `app/lib/main.dart` and
+`app/assets/models/metadata.yaml`.
 
 ## Configuration
 
@@ -187,7 +225,7 @@ Constants in [`app/lib/main.dart`](app/lib/main.dart):
 
 | Constant | Default | Effect |
 |----------|---------|--------|
-| `kUseTrainedModel` | `false` | `false` = COCO `yolo26n`; `true` = bundled `assets/models/dogscan.tflite` |
+| `kUseTrainedModel` | `true` | `true` = bundled `assets/models/dogscan.tflite` (16 breeds); `false` = generic COCO `yolo26n` (needs Wi-Fi once, detects `dog` only) |
 | `kConfidence` | `0.5` | Detection confidence threshold |
 | `kBreedPt` | map | Slug → display name (pt-BR) |
 
@@ -214,9 +252,9 @@ adb push app/build/app/outputs/flutter-apk/app-release.apk /sdcard/Download/dogs
 
 ## Roadmap
 
-- [x] Train and bundle the 16-breed YOLO11n model
+- [x] Train and bundle the 16-breed YOLO11n model (runs offline on a fresh clone)
 - [ ] Temporal smoothing of boxes between frames
-- [ ] Bundle a COCO TFLite so first run is fully offline
+- [ ] Publish `best.pt` + full training run as a GitHub Release
 - [ ] Expand breed list; compare YOLO11n vs YOLO11s (mAP vs FPS)
 - [ ] iOS build + Core ML export
 - [ ] Release signing config + CI build
