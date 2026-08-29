@@ -214,7 +214,7 @@ adb push app/build/app/outputs/flutter-apk/app-release.apk /sdcard/Download/dogs
 
 ## Roadmap
 
-- [ ] Train and bundle the 16-breed YOLO11n model
+- [x] Train and bundle the 16-breed YOLO11n model
 - [ ] Temporal smoothing of boxes between frames
 - [ ] Bundle a COCO TFLite so first run is fully offline
 - [ ] Expand breed list; compare YOLO11n vs YOLO11s (mAP vs FPS)

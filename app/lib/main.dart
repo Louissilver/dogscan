@@ -6,7 +6,7 @@ void main() => runApp(const DogScanApp());
 
 /// Troque para true depois de treinar e colocar o .tflite em
 /// assets/models/dogscan.tflite (ver README na raiz).
-const bool kUseTrainedModel = false;
+const bool kUseTrainedModel = true;
 
 /// Modelo COCO oficial (baixado on-demand pelo plugin) so detecta "dog"
 /// generico. O modelo treinado da a raca.
